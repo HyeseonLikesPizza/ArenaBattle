@@ -7,7 +7,7 @@
 AFountain::AFountain()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	// 컴포넌트 생성
 
@@ -15,6 +15,7 @@ AFountain::AFountain()
 	Water = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WATER"));
 	Light = CreateDefaultSubobject<UPointLightComponent>(TEXT("LIGHT"));
 	Splash = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("SPLASH"));
+	Movement = CreateDefaultSubobject<URotatingMovementComponent>(TEXT("MOVEMENT"));
 
 	// Body를 루트 컴포넌트로 만들고, 나머지 컴포넌트들을 Body의 자식 컴포넌트로 붙인다.
 
@@ -55,19 +56,39 @@ AFountain::AFountain()
 	{
 		Splash->SetTemplate(PS_SPALSH.Object);
 	}
+
+	// RotateSpeed 값 설정, 무브먼트 컴포넌트의 값을 설정한다
+	RotateSpeed = 30.0f;
+	Movement->RotationRate = FRotator(0.0f, RotateSpeed, 0.0f);
 }
 
 // Called when the game starts or when spawned
 void AFountain::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	//UE_LOG(ArenaBattle, Warning, TEXT("Actor Name : %s, ID : %d, Location X : %.3f"), *GetName(), ID, GetActorLocation().X);
+	ABLOG_S(Warning);
+	ABLOG(Warning, TEXT("Actorr Name : %s, ID : %d, Location X : %.3f"), *GetName(), ID, GetActorLocation().X);
+}
+
+void AFountain::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	ABLOG_S(Warning);
+}
+
+void AFountain::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	ABLOG_S(Warning);
 }
 
 // Called every frame
 void AFountain::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	// 매 프레임마다 상하를 기준으로 RotateSpeed만큼 액터가 회전하도록 한다.
+	//AddActorLocalRotation(FRotator(0.0f, RotateSpeed*DeltaTime, 0.0f));
 }
 
