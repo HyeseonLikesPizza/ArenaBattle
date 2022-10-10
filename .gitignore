@@ -3,5 +3,7 @@
 /Saved
 /Build
 /Plugins
+/Content
+/Binaries/Win64
 *.sln
 *_BuiltData.uasset
